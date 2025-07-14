@@ -52,7 +52,7 @@ export const Login = ({ className, ...props }: React.ComponentProps<"div">) => {
               </div>
               <div className="flex flex-col gap-3">
                 <Button type="submit" className="w-full">
-                  Login
+                  Zaloguj się
                 </Button>
               </div>
             </div>
