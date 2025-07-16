@@ -23,25 +23,28 @@ export const Register = () => {
           <form>
             <div className="flex flex-col gap-6">
               <div className="grid gap-3">
-                <Label htmlFor="name">Imię</Label>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="Jan Kowalski"
-                  required
-                />
+                <Label htmlFor="name">Nazwa użytkownika:</Label>
+                <Input id="name" type="text" placeholder="ChujekWujek84" />
               </div>
               <div className="grid gap-3">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="name">Imię:</Label>
+                <Input id="name" type="text" placeholder="Jan" />
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="name">Nazwisko:</Label>
+                <Input id="name" type="text" placeholder="Kowalski" />
+              </div>
+              <div className="grid gap-3">
+                <Label htmlFor="email">Email:</Label>
                 <Input
                   id="email"
                   type="email"
-                  placeholder="jan@kowalski.com"
+                  placeholder="chujekwujek@pidief.com"
                   required
                 />
               </div>
               <div className="grid gap-3">
-                <Label htmlFor="password">Hasło</Label>
+                <Label htmlFor="password">Hasło:</Label>
                 <Input
                   id="password"
                   type="password"

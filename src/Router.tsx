@@ -13,9 +13,11 @@ export const Router = () => {
       <BrowserRouter>
         <Navbar />
         <Routes>
+          {/* <div className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-300 py-12"> */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<Index />} />
+          {/* </div> */}
           {/* <Route path="/todos" element={<TodoList />} /> */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>
