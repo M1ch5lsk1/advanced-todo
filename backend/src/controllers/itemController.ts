@@ -116,26 +116,50 @@ export const deleteItem = (req: Request, res: Response, next: NextFunction) => {
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { email, password } = await req.body;
-    console.log(`Login attempt with name: ${email}`);
+    const { email, password } = req.body;
     if (!email || !password) {
       return res.status(400).json({ message: 'Username and password are required' });
     }
 
-    // Szukamy użytkownika po name
-    const user = await client.db("advanced-TODO").collection("users").findOne({ email: email});
+    const user = await client.db("advanced-TODO").collection("users").findOne({ email });
     if (!user) {
       return res.status(401).json({ message: 'Invalid username or password' });
     }
 
-    // Sprawdzamy hasło (tu zakładamy, że hasło jest przechowywane jawnie - w praktyce powinno być hashowane!)
     if (user.password !== password) {
       return res.status(401).json({ message: 'Invalid username or password' });
     }
 
-    // Jeśli wszystko OK
-    res.status(200).json({ message: 'Login successful', user: { email: user.email } });
+    // Ustawiamy cookie z danymi użytkownika (np. email i id)
+    // res.cookie('user', JSON.stringify({ email: user.email, id: user._id }), {
+    //   httpOnly: true,
+    //   maxAge: 24 * 60 * 60 * 1000, // 1 dzień
+    //   sameSite: 'lax',
+    //   secure: process.env.NODE_ENV === 'production',
+    // });
+    delete user.password; // Usuwamy hasło przed wysłaniem
+    res.status(200).json({ message: 'Login successful', user });
   } catch (error) {
     next(error);
   }
 };
+
+export const register = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const newUser = req.body; // Hasło powinno być haszowane w produkcji
+    if (!newUser.email || !newUser.password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+
+    const existingUser = await client.db("advanced-TODO").collection("users").findOne({ email: newUser.email });
+    if (existingUser) {
+      return res.status(409).json({ message: 'User already exists' });
+    }
+
+    const result = await client.db("advanced-TODO").collection("users").insertOne(newUser);
+    
+    res.status(201).json({ message: 'User registered successfully', userId: result.insertedId });
+  } catch (error) {
+    next(error);
+  }
+}
