@@ -14,8 +14,8 @@ import { useState } from "react";
 export const Login = ({ className, ...props }: React.ComponentProps<"div">) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-
+  const [message, setMessage] = useState({ text: "", type: "" });
+  const [color, setColor] = useState("");
   return (
     <div
       className={cn(
@@ -65,6 +65,7 @@ export const Login = ({ className, ...props }: React.ComponentProps<"div">) => {
                   type="submit"
                   className="w-full"
                   onClick={async (e) => {
+                    let response;
                     e.preventDefault();
                     await fetch("http://localhost:3000/api/items/login", {
                       method: "POST",
@@ -73,13 +74,28 @@ export const Login = ({ className, ...props }: React.ComponentProps<"div">) => {
                         email: email,
                         password: password,
                       }),
-                    }).then((res) => {
+                    }).then((res: Response) => {
+                      response = res;
                       if (res.ok) {
-                        setMessage("Zalogowano pomyślnie!");
+                        setMessage({
+                          text: "Zalogowano pomyślnie!",
+                          type: "success",
+                        });
                       } else {
-                        setMessage("Błąd logowania. Sprawdź dane.");
+                        setMessage({
+                          text: "Błąd logowania. Sprawdź dane.",
+                          type: "error",
+                        });
                       }
                     });
+                    setColor(
+                      message.type === "success"
+                        ? "text-green-500"
+                        : "text-red-500"
+                    );
+                    response = await response.json();
+                    localStorage.setItem("user", JSON.stringify(response.user));
+                    window.location.href = "/"; // Redirect to home page after login
                   }}
                 >
                   Zaloguj się
@@ -95,7 +111,7 @@ export const Login = ({ className, ...props }: React.ComponentProps<"div">) => {
           </form>
         </CardContent>
         {message && (
-          <div className="text-center text-red-500 mt-4">{message}</div>
+          <div className={"text-center " + color + " mt-4"}>{message.text}</div>
         )}
       </Card>
     </div>

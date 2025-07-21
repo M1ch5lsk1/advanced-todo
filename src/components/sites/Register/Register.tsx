@@ -8,11 +8,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { fetchWrapper, getUser } from "@/utils";
+import { backendUrl, type ToDoTask, getUser } from "@/utils";
 import { useState } from "react";
 
 // const backendUrl = import.meta.env.VITE_BACKEND_URL;
-const backendUrl = "http://localhost:3000";
+// const backendUrl = "http://localhost:3000";
 console.log(backendUrl);
 
 const PasswordErrorMessage = () => {
@@ -38,17 +38,25 @@ export const Register = () => {
       value: "",
       isTouched: false,
     },
+    todos: [] as ToDoTask[],
   });
+
+  const [response, setResponse] = useState<any>(null);
   const handleLogin = async () => {
-    let response = await fetch(`${backendUrl}/api/item/register`, {
+    let response = await fetch(`${backendUrl}/api/items/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(humanInfo),
+      body: JSON.stringify({
+        ...humanInfo,
+        password: humanInfo.password.value,
+      }),
     });
-    response = await response.text();
-    console.log(response);
+    response = await response.json();
+    setResponse(response);
+    setServerValidation(response.message);
+    window.location.href = "/login"; // Redirect to login page after registration
   };
 
   return (
@@ -135,11 +143,16 @@ export const Register = () => {
                 Zarejestruj się
               </Button>
             </div>
-            {serverValidationMsg && (
-              <div className="text-center text-red-500 mt-4">
-                {serverValidationMsg}
-              </div>
-            )}
+            {serverValidationMsg &&
+              (response.userId ? (
+                <div className="text-center text-green-500 mt-4">
+                  {serverValidationMsg}
+                </div>
+              ) : (
+                <div className="text-center text-red-500 mt-4">
+                  {serverValidationMsg}
+                </div>
+              ))}
             {humanInfo.password.isTouched &&
             humanInfo.password.value.length < 8 ? (
               <PasswordErrorMessage />

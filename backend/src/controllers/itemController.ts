@@ -138,7 +138,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     //   secure: process.env.NODE_ENV === 'production',
     // });
     delete user.password; // Usuwamy hasło przed wysłaniem
-    res.status(200).json({ message: 'Login successful', user });
+    res.status(200).json({ message: 'Login successful', user});
   } catch (error) {
     next(error);
   }
@@ -153,7 +153,7 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 
     const existingUser = await client.db("advanced-TODO").collection("users").findOne({ email: newUser.email });
     if (existingUser) {
-      return res.status(409).json({ message: 'User already exists' });
+      return res.status(409).json({ message: 'User already exists'});
     }
 
     const result = await client.db("advanced-TODO").collection("users").insertOne(newUser);

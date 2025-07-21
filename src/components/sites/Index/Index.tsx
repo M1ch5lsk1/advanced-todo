@@ -4,8 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 // Przykładowe dane notatek, to jest placeholder dla ludzi niezalogowanych
 
-const user = {}; // do zamiany w przyszłości na hook sprawdzający cookies
+// const user = {}; // do zamiany w przyszłości na hook sprawdzający cookies
 
+const user = window.localStorage.getItem("user")
+  ? JSON.parse(window.localStorage.getItem("user") || "")
+  : undefined;
+
+console.log("User from localStorage:", user);
 const notes = [
   {
     id: 1,

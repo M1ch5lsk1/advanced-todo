@@ -74,3 +74,29 @@ export const getUser = () => {
     return undefined;
   }
 };
+
+export const backendUrl = "http://localhost:3000"; // Adjust as needed
+
+interface Change {
+  id: string;
+  indexRange: {
+    start: number
+    end: number
+  };
+  oldValue: any;
+  newValue: any;
+  timestamp: string; // ISO date string
+}
+export interface ToDoTask {
+  id: string;
+  title: string;
+  description?: string;
+  completed: boolean;
+  createdAt: string; // ISO date string
+  updatedAt: string; // ISO date string
+  toWhen?: string; // ISO date string, optional
+  priority?: "low" | "medium" | "high"; // Optional field for priority
+  completedAt?: string; // ISO date string, optional
+  sharedWith?: string; // Optional field for sharing
+  changes?: Change[]
+} 
