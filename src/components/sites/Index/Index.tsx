@@ -2,15 +2,18 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { getUser } from "@/utils";
 // Przykładowe dane notatek, to jest placeholder dla ludzi niezalogowanych
 
 // const user = {}; // do zamiany w przyszłości na hook sprawdzający cookies
 
-const user = window.localStorage.getItem("user")
-  ? JSON.parse(window.localStorage.getItem("user") || "")
-  : undefined;
+const user = getUser();
+const isUser = Boolean(user);
+// ? JSON.parse(window.localStorage.getItem("user") || "")
+// : undefined;
 
 console.log("User from localStorage:", user);
+console.log("Is user", Boolean(user));
 const notes = [
   {
     id: 1,
@@ -40,14 +43,20 @@ export const Index = () => {
         className="max-w-[25vw] mx-auto mb-8 scale-[125%]"
       >
         {/* <Terminal /> */}
-        <AlertTitle>Witaj użytkowniku!</AlertTitle>
-        <AlertDescription>
-          Zaloguj się aby stworzyć lub przeglądać swoje notatki.
-        </AlertDescription>
+        <AlertTitle>
+          Witaj {isUser ? "ponownie " + user?.nick : "użytkowniku"}!
+        </AlertTitle>
+        {
+          <AlertDescription>
+            {isUser
+              ? "Zobacz lub stwórz notatki. Nigdy nie zapomnij o tym co jest dla ciebie ważne!"
+              : "Zaloguj się aby stworzyć lub przeglądać swoje notatki."}
+          </AlertDescription>
+        }
       </Alert>
       <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold text-center mb-8">
-          Przykładowe notatki
+          Twoje ostatnie notatki
         </h1>
         <div className="space-y-6">
           {notes.map((note) => (

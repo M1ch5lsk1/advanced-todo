@@ -6,6 +6,9 @@ import { Login } from "./components/sites/Login/Login";
 import { Index } from "./components/sites/Index/Index";
 import { Navbar } from "./components/Navbar";
 import { Register } from "./components/sites/Register/Register";
+import { Account } from "./components/sites/Account/Account";
+import { Todos } from "./components/sites/Todos/Todos";
+import { Create } from "./components/sites/Todos/Create/Create";
 
 export const Router = () => {
   return (
@@ -17,6 +20,9 @@ export const Router = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<Index />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/todos" element={<Todos />} />
+          <Route path="/todos/create" element={<Create />} />
           {/* </div> */}
           {/* <Route path="/todos" element={<TodoList />} /> */}
           {/* <Route path="*" element={<NotFound />} /> */}

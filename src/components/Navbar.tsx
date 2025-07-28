@@ -1,17 +1,19 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { getUser } from "@/utils";
 
 export const Navbar = () => {
   const location = useLocation();
-  const user = { name: "" }; // do zamiany w przyszłości na hook sprawdzający cookies
+  const user = getUser();
 
   const navLinks = [
     { to: "/", label: "Strona główna" },
-    { to: "/todos", label: user.name ? "Moje zadania" : "" },
+    { to: "/todos", label: user?.email ? "Moje TO-DO" : "" },
+    { to: "/todos/create", label: user?.email ? "robie TO-DO" : "" },
     {
-      to: user.name ? "/account" : "/login",
-      label: user.name ? "Twoje konto" : "Logowanie",
+      to: user?.email ? "/account" : "/login",
+      label: user?.email ? "Moje konto" : "Logowanie",
     },
   ];
 
