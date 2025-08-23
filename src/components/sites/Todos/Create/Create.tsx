@@ -25,6 +25,11 @@ export const Create = () => {
   const [date, setDate] = React.useState<Date | undefined>(
     new Date(2025, 5, 12)
   );
+  const [ToDoObj, SetToDoState] = React.useState({
+    title: "",
+    description: "",
+    date: "",
+  });
   return (
     <div className="flex flex-col gap-6 max-w-[33vw] mx-auto mt-[2vh]">
       <Card>
@@ -43,6 +48,10 @@ export const Create = () => {
                   id="text"
                   type="text"
                   placeholder="Weri ważne zadanie"
+                  onChange={(e) => {
+                    console.log(ToDoObj);
+                    SetToDoState({ ...ToDoObj, title: e.target.value });
+                  }}
                   required
                 />
               </div>
@@ -64,7 +73,21 @@ export const Create = () => {
                   className="rounded-lg border shadow-sm"
                 />
                 {date?.toString()}
-                <Button type="submit" className="w-full">
+                <Button
+                  type="submit"
+                  className="w-full"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    await fetch("http://localhost:3000/api/items/login", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({
+                        email: email,
+                        password: password,
+                      }),
+                    });
+                  }}
+                >
                   Zapisz
                 </Button>
               </div>

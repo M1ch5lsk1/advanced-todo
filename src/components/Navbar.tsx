@@ -10,7 +10,6 @@ export const Navbar = () => {
   const navLinks = [
     { to: "/", label: "Strona główna" },
     { to: "/todos", label: user?.email ? "Moje TO-DO" : "" },
-    { to: "/todos/create", label: user?.email ? "robie TO-DO" : "" },
     {
       to: user?.email ? "/account" : "/login",
       label: user?.email ? "Moje konto" : "Logowanie",
