@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { items, Item } from '../models/item';
-import { MongoClient, ServerApiVersion } from 'mongodb';
+import { MongoClient, ServerApiVersion, ObjectId } from 'mongodb';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -159,6 +159,29 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
     const result = await client.db("advanced-TODO").collection("users").insertOne(newUser);
     
     res.status(201).json({ message: 'User registered successfully', userId: result.insertedId });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export const toDoCreateItem = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    
+    
+    // if (!title || !userId) {
+    //   return res.status(400).json({ message: 'Title and userId are required' });
+    // }
+
+    
+    const findUser = await client.db("advanced-TODO").collection("users").findOne({ _id: new ObjectId(req.body.userId) });
+    if (!findUser) {
+      return res.status(401).json({ message: 'Invalid userId' });
+    }
+
+    // const result = await client.db("advanced-TODO").collection("todos").updateOne();
+    console.log(findUser);
+    
+    // res.status(201).json({ message: 'To-Do item created successfully', toDoId: result.insertedId });
   } catch (error) {
     next(error);
   }

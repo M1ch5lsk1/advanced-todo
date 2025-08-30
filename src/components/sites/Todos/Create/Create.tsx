@@ -20,16 +20,19 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
+import { getUser } from "@/utils";
 
 export const Create = () => {
+  const user = getUser();
   const [date, setDate] = React.useState<Date | undefined>(
-    new Date(2025, 5, 12)
+    new Date(2025, 1, 1)
   );
   const [ToDoObj, SetToDoState] = React.useState({
     title: "",
     description: "",
     date: "",
   });
+
   return (
     <div className="flex flex-col gap-6 max-w-[33vw] mx-auto mt-[2vh]">
       <Card>
@@ -49,7 +52,6 @@ export const Create = () => {
                   type="text"
                   placeholder="Weri ważne zadanie"
                   onChange={(e) => {
-                    console.log(ToDoObj);
                     SetToDoState({ ...ToDoObj, title: e.target.value });
                   }}
                   required
@@ -63,6 +65,9 @@ export const Create = () => {
                   id="text"
                   className="min-h-[10vh]"
                   placeholder="Pójść do kibelka po wstaniu"
+                  onChange={(e) => {
+                    SetToDoState({ ...ToDoObj, description: e.target.value });
+                  }}
                   required
                 />
                 <Calendar
@@ -78,14 +83,18 @@ export const Create = () => {
                   className="w-full"
                   onClick={async (e) => {
                     e.preventDefault();
-                    await fetch("http://localhost:3000/api/items/login", {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({
-                        email: email,
-                        password: password,
-                      }),
-                    });
+                    SetToDoState({ ...ToDoObj, date: date?.toString() || "" });
+                    await fetch(
+                      "http://localhost:3000/api/items/todos/create",
+                      {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          ...ToDoObj,
+                          userId: user._id,
+                        }),
+                      }
+                    );
                   }}
                 >
                   Zapisz

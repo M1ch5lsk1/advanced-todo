@@ -7,7 +7,8 @@ import {
   updateItem,
   deleteItem,
   login,
-  register
+  register,
+  toDoCreateItem
 } from '../controllers/itemController';
 // import { MongoClient, ServerApiVersion } from 'mongodb';
 import dotenv from 'dotenv';
@@ -23,5 +24,6 @@ router.put('/:id', updateItem);
 router.delete('/:id', deleteItem);
 router.post('/login', login);
 router.post('/register', register);
+router.post('/todos/create', toDoCreateItem);
 
 export default router;
