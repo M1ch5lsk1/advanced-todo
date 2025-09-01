@@ -173,13 +173,15 @@ export const toDoCreateItem = async (req: Request, res: Response, next: NextFunc
     // }
 
     
-    const findUser = await client.db("advanced-TODO").collection("users").findOne({ _id: new ObjectId(req.body.userId) });
+    const findUser = await client.db("advanced-TODO").collection("users").findOne({ _id: new ObjectId(req.body.author) });
     if (!findUser) {
       return res.status(401).json({ message: 'Invalid userId' });
     }
+    // return console.log(findUser, req.body);
 
-    // const result = await client.db("advanced-TODO").collection("todos").updateOne();
-    console.log(findUser);
+    const result = await client.db("advanced-TODO").collection("todos").insertOne(req.body);
+    res.status(201).json({ message: 'To-Do item created successfully', toDoId: result.insertedId });
+    ;
     
     // res.status(201).json({ message: 'To-Do item created successfully', toDoId: result.insertedId });
   } catch (error) {
