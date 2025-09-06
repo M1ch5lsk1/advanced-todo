@@ -24,7 +24,11 @@ import { getUser } from "@/utils";
 
 export const Create = () => {
   const user = getUser();
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
+  const [date, setDate] = React.useState<Date | undefined>(undefined);
+  const [backendResponse, setResponse] = React.useState({
+    message: "",
+    ToDoId: "",
+  });
   const [ToDoObj, SetToDoState] = React.useState({
     author: user._id,
     title: "",
@@ -36,39 +40,16 @@ export const Create = () => {
   });
   React.useEffect(() => {
     console.log(date);
+    SetToDoState({
+      ...ToDoObj,
+      deadline: date?.toString() || "",
+      createdAt: new Date().toString(),
+      modifiedAt: new Date().toString(),
+    });
   }, [date]);
-  const buttonEl = () => {
-    return (
-      <Button
-        type="submit"
-        className="w-full"
-        onClick={async (e) => {
-          e.preventDefault();
-          SetToDoState({
-            ...ToDoObj,
-            deadline: date?.toString() || "",
-            createdAt: new Date().toString(),
-            modifiedAt: new Date().toString(),
-          });
-          console.log(
-            JSON.stringify({
-              ...ToDoObj,
-              userId: user._id,
-            })
-          );
-          await fetch("http://localhost:3000/api/items/todos/create", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              ...ToDoObj,
-            }),
-          });
-        }}
-      >
-        Zapisz
-      </Button>
-    );
-  };
+  React.useEffect(() => {
+    console.log(backendResponse.message);
+  }, [backendResponse]);
   return (
     <div className="flex flex-col gap-6 max-w-[33vw] mx-auto mt-[2vh]">
       <Card>
@@ -111,13 +92,41 @@ export const Create = () => {
                 </CardTitle>
                 <Calendar
                   mode="single"
+                  required={true}
                   defaultMonth={date}
                   selected={date}
                   onSelect={setDate}
                   className="rounded-lg border shadow-sm"
                 />
                 {/* {date?.toString()} */}
-                {buttonEl()}
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={!date}
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    await fetch(
+                      "http://localhost:3000/api/items/todos/create",
+                      {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(ToDoObj),
+                      }
+                    ).then(async (res) => {
+                      const data = await res.json();
+                      console.log("linia 115: ", data);
+                      setResponse(data);
+                    });
+                  }}
+                >
+                  Zapisz
+                </Button>
+                {backendResponse && (
+                  <div className={"text-center text-green-500 mt-4 bold"}>
+                    {backendResponse.message}
+                  </div>
+                )}
+                {backendResponse.message ? (location.href = "/todos") : ""}
               </div>
             </div>
           </form>
